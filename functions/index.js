@@ -6,6 +6,8 @@ const {
   debug,
   error,
 } = require("firebase-functions/logger");
+const handlePostRequest = require("./handlers/postHandler");
+const verifyJWT = require("./middleware/verifyJWT");
 
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   telegram: {webhookReply: true},
@@ -62,55 +64,31 @@ exports.echoBot = functions.https.onRequest(async (request, response) => {
 exports.api = onRequest(async (request, response) => {
   // HTTP routing
   if (request.path === "/messages") {
-    if (request.method === "POST") {
-      log("HTTP POST:", JSON.stringify(request.body, null, 2));
-
-      // Expecting `chatId`, `text`, `imageUrl`, and `type`
-      const {chatId, text, imageUrl, type} = request.body;
-
-      // Input parameters validation
-      if (!chatId) {
-        return response.status(400).send("chatId is required.");
+    try {
+      // Verify JWT for all incoming requests
+      verifyJWT(request);
+      // Route POST requests to a dedicated handler
+      if (request.method === "POST") {
+        return await handlePostRequest(bot, request, response);
       }
-
-      try {
-        if (type === "media") {
-          if (!imageUrl) {
-            return response.status(400)
-                .send("imageUrl is required for media type");
-          }
-          // Send a photo with an optional HTML-formatted caption
-          await bot.telegram.sendPhoto(chatId, imageUrl, {
-            // HTML-formatted caption
-            caption: text,
-            // Enable HTML parsing
-            parse_mode: "HTML",
-          });
-          log("Media message (photo) sent successfully to chat:", chatId);
-        } else {
-          if (!text) {
-            return response.status(400).send("text is required.");
-          }
-          // Send a plain text message with HTML formatting
-          await bot.telegram.sendMessage(chatId, text, {
-            // Enable HTML parsing
-            parse_mode: "HTML",
-          });
-          log("Text message sent successfully to chat:", chatId);
-        }
-        // Success
-        return response.sendStatus(200);
-      } catch (error) {
-        if (error.code === 400) {
-          return response.status(400).send(error.description);
-        }
-        // Firebase function error
-        log("Error sending message:", error);
-        return response.status(500).send("Failed to send message.");
+    } catch (error) {
+      if (error.code === 400) {
+        return response.status(error.code )
+            .send(error.description);
       }
+      if (error.code === 401 || error.httpStatusCode === 401 ) {
+        response.status(error.code )
+            .send(error.description || error.message);
+      }
+      // Firebase function error
+      log("Error sending message:", error);
+      return response.status(500)
+          .send("Failed to send message");
     }
+
     // Not supported HTTP methods
-    return response.status(405).send("Method Not Allowed");
+    return response.status(405)
+        .send("Method Not Allowed");
   }
 
   // GCP: Default STARTUP TCP probe succeeded
