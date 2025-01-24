@@ -38,3 +38,9 @@ run locally function:
 ```
 firebase serve
 ```
+
+firebase function:
+
+```
+firebase deploy --only functions
+```

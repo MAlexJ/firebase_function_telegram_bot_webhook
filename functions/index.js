@@ -1,45 +1,13 @@
 const functions = require("firebase-functions");
 const {onRequest} = require("firebase-functions/v2/https");
-const {Telegraf} = require("telegraf");
-const {
-  log,
-  debug,
-  error,
-} = require("firebase-functions/logger");
-const handlePostRequest = require("./handlers/postHandler");
-const verifyJWT = require("./middleware/verifyJWT");
-
-const bot = new Telegraf(process.env.BOT_TOKEN, {
-  telegram: {webhookReply: true},
-});
-
-// error handling
-bot.catch(async (err, ctx) => {
-  // Log the error for debugging
-  error("[Bot] Error:", err);
-
-  try {
-    // Send a user-friendly error message to the user
-    const errMsg = `Oops, encountered an error for ${ctx.updateType}`;
-    await ctx.reply(errMsg);
-  } catch (replyError) {
-    console.error("[Bot] Failed to send error message:", replyError);
-  }
-});
-
-// initialize the commands
-bot.start((ctx) => ctx.reply("Hello! Send any message and I will copy it."));
-bot.help((ctx) => ctx.reply("Send me a sticker"));
-
-// copy every message and send to the user
-bot.on("message", (ctx) => {
-  debug("Message", ctx.message);
-  return ctx.copyMessage(ctx.chat.id);
-});
+const {log} = require("firebase-functions/logger");
+const bot = require("./bot");
+const verifyToken = require("./jwt");
+const sendMessage = require("./sender");
 
 // handle all telegram updates with HTTPs trigger
 exports.echoBot = functions.https.onRequest(async (request, response) => {
-  log("Incoming message", request.body);
+  log("Incoming tg update:", request.body);
   return bot.handleUpdate(request.body, response)
       .then((rv) => {
         // rv represents the return value of the bot.handleUpdate() method.
@@ -62,37 +30,31 @@ exports.echoBot = functions.https.onRequest(async (request, response) => {
 });
 
 exports.api = onRequest(async (request, response) => {
-  // HTTP routing
   if (request.path === "/messages") {
     try {
       // Verify JWT for all incoming requests
-      verifyJWT(request);
+      verifyToken(request);
       // Route POST requests to a dedicated handler
       if (request.method === "POST") {
-        return await handlePostRequest(bot, request, response);
+        return await sendMessage(bot, request, response);
       }
     } catch (error) {
       if (error.code === 400) {
-        return response.status(error.code )
-            .send(error.description);
+        return response.status(error.code).send(error.message);
       }
-      if (error.code === 401 || error.httpStatusCode === 401 ) {
-        response.status(error.code )
-            .send(error.description || error.message);
+      if (error.code === 401 ) {
+        return response.status(error.code).send(error.message);
       }
       // Firebase function error
       log("Error sending message:", error);
-      return response.status(500)
-          .send("Failed to send message");
+      return response.status(500).send("Failed to send message");
     }
 
     // Not supported HTTP methods
-    return response.status(405)
-        .send("Method Not Allowed");
+    return response.status(405).send("Http method not supported");
   }
-
   // GCP: Default STARTUP TCP probe succeeded
   // after attempt for container "worker" on port 8080
   log("Ping api!");
-  response.sendStatus(200);
+  return response.sendStatus(200);
 });
