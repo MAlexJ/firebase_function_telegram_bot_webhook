@@ -8,6 +8,9 @@ firebase-debug.log*
 firebase-debug.*.log*
 .idea
 .env
+.DS_Store
+*.DS_Store
+
 
 # Firebase cache
 .firebase/

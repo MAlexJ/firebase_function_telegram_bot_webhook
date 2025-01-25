@@ -1,15 +1,23 @@
 /**
- * Validates the request body for required parameters.
- * Ensures the payload contains the appropriate fields based on the `type`.
+ * Validates the parameters of a message object.
+ * Ensures all required fields are present based on the `type` of the message.
  *
- * @param {String} chatId - chat or user id
- * @param {String} text - message
- * @param {String} imageUrl - Timage url
- * @param {String} type - media or text type
- * @throws {Error} Throws an error with HTTP status code 400
- * if a required parameter is missing or if the payload is invalid.
+ * @function validateMessage
+ * @param {Object} message - The message object containing the parameters
+ * to validate.
+ * @param {string} message.chatId - The ID of the chat where the message
+ * will be sent.
+ * @param {string} [message.text] - The text content of the message
+ * (required for `type: "text"`).
+ * @param {string} [message.imageUrl] - The URL of the image
+ * (required for `type: "media"`).
+ * @param {string} message.type - The type of the message
+ * (`text` or `media`).
+ * @throws {Error} Throws a validation error with HTTP status code 400
+ * if required fields are missing.
  */
-function validateMessage(chatId, text, imageUrl, type) {
+function validateMessage(message) {
+  const {chatId, text, imageUrl, type} = message;
   // Validate `chatId` (common for all types)
   if (!chatId) {
     throwValidationError("chatId is required");

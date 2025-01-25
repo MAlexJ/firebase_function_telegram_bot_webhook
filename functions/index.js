@@ -2,8 +2,8 @@ const functions = require("firebase-functions");
 const {onRequest} = require("firebase-functions/v2/https");
 const {log} = require("firebase-functions/logger");
 const bot = require("./bot");
-const verifyToken = require("./jwt");
-const sendMessage = require("./sender");
+const rest = require("./rest");
+
 
 // handle all telegram updates with HTTPs trigger
 exports.echoBot = functions.https.onRequest(async (request, response) => {
@@ -29,32 +29,7 @@ exports.echoBot = functions.https.onRequest(async (request, response) => {
       });
 });
 
-exports.api = onRequest(async (request, response) => {
-  if (request.path === "/messages") {
-    try {
-      // Verify JWT for all incoming requests
-      verifyToken(request);
-      // Route POST requests to a dedicated handler
-      if (request.method === "POST") {
-        return await sendMessage(bot, request, response);
-      }
-    } catch (error) {
-      if (error.code === 400) {
-        return response.status(error.code).send(error.message);
-      }
-      if (error.code === 401 ) {
-        return response.status(error.code).send(error.message);
-      }
-      // Firebase function error
-      log("Error sending message:", error);
-      return response.status(500).send("Failed to send message");
-    }
 
-    // Not supported HTTP methods
-    return response.status(405).send("Http method not supported");
-  }
-  // GCP: Default STARTUP TCP probe succeeded
-  // after attempt for container "worker" on port 8080
-  log("Ping api!");
-  return response.sendStatus(200);
+exports.api = onRequest(async (request, response) => {
+  return await rest(request, response);
 });
