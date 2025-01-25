@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "e01834f3-d523-41a9-8873-eb03b0ae89f4",
+		"name": "telegram_bot",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1029946"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "test",
+					"item": [
+						{
+							"name": "API: Send text message: Authorization header is missing.",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"chatId\": 6105463387,\n    \"text\": \"<i>This defaults to a text message!</i>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/messages",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API: Send text message: Token is missing.",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer ",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"chatId\": 6105463387,\n    \"text\": \"<i>This defaults to a text message!</i>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/messages",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API: Send message: Chat not found",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authorization_jwt_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"chatId\": -1,\n    \"type\": \"text\",\n    \"text\": \"<i>This defaults to a text message!</i>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/messages",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "API: Send text message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authorization_jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"chatId\": 6105463387,\n    \"type\": \"text\",\n    \"text\": \"<i>This defaults to a text message!</i>\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/messages",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API: Send media type message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authorization_jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"chatId\": \"6105463387\",\n  \"type\": \"media\",\n  \"text\": \"<b>Check out this image!</b>\",\n  \"imageUrl\": \"https://habrastorage.org/r/w1560/getpro/habr/upload_files/a5f/805/6e3/a5f8056e336e2fdfe25d5a3387642127.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/messages",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API: ping API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bot",
+			"item": [
+				{
+					"name": "BOT: ping API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/echoBot",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"echoBot"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

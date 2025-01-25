@@ -39,8 +39,21 @@ run locally function:
 firebase serve
 ```
 
-firebase function:
+deploy to GCP/Firebase:
 
 ```
 firebase deploy --only functions
 ```
+
+### Code style
+
+Enable ESLint in WebStorm
+
+1. Open Preferences (macOS: Cmd + , | Windows/Linux: Ctrl + Alt + S).
+2. Navigate to Languages & Frameworks > JavaScript > Code Quality Tools > ESLint.
+3. Configure the following:
+    * Automatic ESLint configuration: Choose this option if you have an .eslintrc file in your project.
+    * Manual ESLint configuration: If preferred, set the ESLint package path (local or global) and the path to your
+      .eslintrc file.
+4. Ensure Run eslint --fix on save is checked (optional but useful).
+
