@@ -1,7 +1,8 @@
 const {Telegraf} = require("telegraf");
+const {message} = require("telegraf/filters");
+
 const {
-  debug,
-  error,
+  debug, error,
 } = require("firebase-functions/logger");
 
 // Initialize bot
@@ -14,8 +15,8 @@ bot.start((ctx) => ctx.reply("Hello! Send any message and I will copy it."));
 bot.help((ctx) => ctx.reply("Send me a sticker"));
 
 // Message handler
-bot.on("message", (ctx) => {
-  debug("Message", ctx.message);
+bot.on(message(), (ctx) => {
+  debug("Message handler: ", ctx.message);
   return ctx.copyMessage(ctx.chat.id);
 });
 
@@ -27,7 +28,7 @@ bot.catch(async (err, ctx) => {
     const errMsg = `Oops, encountered an error for ${ctx.updateType}`;
     await ctx.reply(errMsg);
   } catch (replyError) {
-    console.error("[Bot] Failed to send error message:", replyError);
+    error("[Bot] Failed to send error message:", replyError);
   }
 });
 
