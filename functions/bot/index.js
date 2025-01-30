@@ -11,8 +11,27 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
 });
 
 // Commands
-bot.start((ctx) => ctx.reply("Hello! Send any message and I will copy it."));
 bot.help((ctx) => ctx.reply("Send me a sticker"));
+bot.start((ctx) => {
+  const queryId = ctx.update.callback_query ?
+                  ctx.update.callback_query.id :
+                  null;
+  const url = `${process.env.WEB_APP_URL}`;
+  const webAppUrl = `${url}?start_param=value&query_id=${queryId}`;
+
+  // Создаем кнопку с WebApp
+  return ctx.reply("Click to open WebApp", {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: "Open WebApp", web_app: {
+              url: webAppUrl,
+            },
+          }]],
+    },
+  });
+});
 
 // Message handler
 bot.on(message(), (ctx) => {
