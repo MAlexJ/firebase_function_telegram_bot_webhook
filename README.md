@@ -8,12 +8,17 @@
 
 ### Project setup
 
-create .env file with properties:
+Create a .env file in the functions folder with the following properties:
 
 ```
 BOT_TOKEN=____TOKEN____
 JWT_SECRET_KEY=____JWT_SECRET____
+WEB_APP_URL=__weapp_hoting___
 ```
+
+and deploy using:
+
+``firebase deploy --only functions``
 
 ### Additional dependencies
 
