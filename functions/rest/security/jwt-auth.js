@@ -36,15 +36,34 @@ function verifyToken(request) {
 }
 
 /**
+ * Generates a JSON Web Token (JWT) with the given userId and expiration time.
+ *
+ * @param {string} userId - The user ID to include in the JWT payload.
+ * @param {string|number} [expiresIn='1m'] - Expiration time
+ * (e.g., '1h', '30m', 3600).
+ * @return {string} The generated JWT.
+ */
+function generateToken(userId, expiresIn = "1m") {
+  if (!JWT_SECRET) {
+    throw new Error("JWT secret key is not defined in environment variables");
+  }
+
+  // Construct payload with userId
+  const payload = {userId};
+
+  return jwt.sign(payload, JWT_SECRET, {expiresIn});
+}
+
+/**
  * Throws an authorization error with a 401 HTTP status code.
  *
  * @param {string} message - The error message to include in the exception.
  * @throws {Error} An error object with an HTTP status code of 401.
  */
-function throwAuthorizationError(message ) {
+function throwAuthorizationError(message) {
   const err = new Error(message);
   err.code = 401;
   throw err;
 }
 
-module.exports = verifyToken;
+module.exports = {verifyToken, generateToken};

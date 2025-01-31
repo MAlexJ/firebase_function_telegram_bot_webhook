@@ -1,4 +1,4 @@
-const verifyToken = require("./security/jwt-auth");
+const {verifyToken} = require("./security/jwt-auth");
 const validateMessage = require("./validation/validate-message");
 const sendMessage = require("./publisher/send-message");
 const {log} = require("firebase-functions/logger");
