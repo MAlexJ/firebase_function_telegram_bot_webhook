@@ -18,7 +18,20 @@ WEB_APP_URL=__weapp_hoting___
 
 and deploy using:
 
-``firebase deploy --only functions``
+```
+firebase deploy --only functions
+```
+
+
+### Note
+
+All code inside `function` folder
+
+```
+cd functions
+
+npm install
+```
 
 ### Additional dependencies
 

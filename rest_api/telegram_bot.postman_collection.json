@@ -27,12 +27,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/api/messages",
+									"raw": "{{host_cloud_function}}/messages",
 									"host": [
-										"{{host}}"
+										"{{host_cloud_function}}"
 									],
 									"path": [
-										"api",
 										"messages"
 									]
 								}
@@ -60,12 +59,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/api/messages",
+									"raw": "{{host_cloud_function}}/messages",
 									"host": [
-										"{{host}}"
+										"{{host_cloud_function}}"
 									],
 									"path": [
-										"api",
 										"messages"
 									]
 								}
@@ -93,12 +91,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/api/messages",
+									"raw": "{{host_cloud_function}}/messages",
 									"host": [
-										"{{host}}"
+										"{{host_cloud_function}}"
 									],
 									"path": [
-										"api",
 										"messages"
 									]
 								}
@@ -128,12 +125,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/messages",
+							"raw": "{{host_cloud_function}}/messages",
 							"host": [
-								"{{host}}"
+								"{{host_cloud_function}}"
 							],
 							"path": [
-								"api",
 								"messages"
 							]
 						}
@@ -161,12 +157,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/messages",
+							"raw": "{{host_cloud_function}}/messages",
 							"host": [
-								"{{host}}"
+								"{{host_cloud_function}}"
 							],
 							"path": [
-								"api",
 								"messages"
 							]
 						}
@@ -179,9 +174,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api",
+							"raw": "{{host_cloud_function}}/api",
 							"host": [
-								"{{host}}"
+								"{{host_cloud_function}}"
 							],
 							"path": [
 								"api"
